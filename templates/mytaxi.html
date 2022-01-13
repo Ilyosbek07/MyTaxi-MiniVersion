@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+    <script>
+        function addUrlParameter(name, value) {
+            let searchParams = new URLSearchParams(window.location.search)
+            if (searchParams.has(name) && searchParams.get(name) === value) {
+                searchParams.delete(name)
+            } else {
+                searchParams.set(name, value)
+            }
+            window.location.search = searchParams.toString()
+        }
+    </script>
+</body>
+</html>
