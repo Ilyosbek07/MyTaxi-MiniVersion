@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -14,6 +14,11 @@ class UserCreateAPIView(CreateAPIView):
 
 
 class OrderCreateAPIView(CreateAPIView):
+	queryset = Order.objects.all()
+	serializer_class = OrderSerializer
+
+
+class OrderUpdateAPIView(UpdateAPIView):
 	queryset = Order.objects.all()
 	serializer_class = OrderSerializer
 
@@ -36,21 +41,14 @@ class OrderAPIView(ListAPIView):
 				f"{from_date.replace('/', '-')} 00:00:00"
 				f"{to_date.replace('/', '-')} 00:00:00"
 			)
-		# return Order.objects.order_by('-pk')
+	# return Order.objects.order_by('-pk')
 
-
-# class OrderListAPIView(ListAPIView):
-# 	queryset = Order.objects.all()
-	# serializer_class = OrderSerializer
-	# filter_backends = [DjangoFilterBackend]
-	# filterset_fields = ['created_at', 'updated_at']
-	#
-	# def get_queryset(self):
-	# 	if Order.objects.filter(
-	# 		created_at__range=['2022-01-13T10:13:54.604940Z',
-	# 						   '2022-01-13T10:14:02.679469Z']
-	# 	):
-	# 		return Order.objects.filter(status='Cancelled')
+# def get_queryset(self):
+# 	if Order.objects.filter(
+# 		created_at__range=['2022-01-13T10:13:54.604940Z',
+# 						   '2022-01-13T10:14:02.679469Z']
+# 	):
+# 		return Order.objects.filter(status='Cancelled')
 
 
 @api_view(['PUT', ])
