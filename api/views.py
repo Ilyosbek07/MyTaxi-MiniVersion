@@ -41,7 +41,10 @@ class OrderAPIView(ListAPIView):
 				f"{from_date.replace('/', '-')} 00:00:00"
 				f"{to_date.replace('/', '-')} 00:00:00"
 			)
-	# return Order.objects.order_by('-pk')
+
+
+# return Order.objects.order_by('-pk')
+
 
 # def get_queryset(self):
 # 	if Order.objects.filter(
@@ -51,17 +54,47 @@ class OrderAPIView(ListAPIView):
 # 		return Order.objects.filter(status='Cancelled')
 
 
-@api_view(['PUT', ])
-def order_update_view(request, slug):
+@api_view(['GET', ])
+def api_order_get_view(request, slug):
 	try:
 		order = Order.objects.get(slug=slug)
-
 	except Order.DoesNotExist:
-		return Response(status=status.HTTP_404_NOT_FOUNT)
+		return Response(status=status.HTTP_404_NOT_FOUND)
+
+	if request.method == 'GET':
+		serializer = OrderSerializer(order)
+		return Response(serializer.data)
+
+
+@api_view(['PUT', ])
+def api_update_order_view(request, slug):
+	try:
+		order = Order.objects.get(slug=slug)
+	except Order.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
 
 	if request.method == 'PUT':
 		serializer = OrderSerializer(order, data=request.data)
 		data = {}
 		if serializer.is_valid():
 			serializer.save()
-			data['success'] = 'update successful'
+			data["succes"] = "update succesful"
+			return Response(data=data)
+		return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE', ])
+def api_delete_order_view(request, slug):
+	try:
+		order = Order.objects.get(slug=slug)
+	except Order.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
+
+	if request.method == 'DELETE':
+		operation = order.delete()
+		data = {}
+		if operation:
+			data["succes"] = "delete succesful"
+		else:
+			data["failure"] = "delete failed"
+		return Response(data=data)
